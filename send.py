@@ -21,7 +21,7 @@ recipient = args.recipient
 message = args.message
 
 path = os.path.abspath('.')
-path_geckodriver = path + '/geckodriver/geckodriver'
+path_geckodriver = path + '/geckodriver/geckodriver-v0.24.0-linux64/geckodriver'
 driver = webdriver.Firefox(executable_path=path_geckodriver)
 driver.get("https://web.whatsapp.com/")
 
