@@ -1,48 +1,52 @@
 # -*- coding: utf-8 -*-
-import time
-import random
-import json
-import requests
 import os
-import datetime
+import base64
+from PIL import Image
+from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from argparse import ArgumentParser
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support import expected_conditions as EC
 
-parser = ArgumentParser()
-parser.add_argument("-R", "--recipient", dest="recipient", help="Recipient of message", required=True)
-parser.add_argument("-M", "--message", dest="message", help="Message to be sent", required=True)
-
-args = parser.parse_args()
-recipient = args.recipient
-message = args.message
-
+options = Options()
+options.headless = True
 path = os.path.abspath('.')
 path_geckodriver = path + '/geckodriver/geckodriver-v0.24.0-linux64/geckodriver'
-driver = webdriver.Firefox(executable_path=path_geckodriver)
+driver = webdriver.Firefox(executable_path=path_geckodriver, options=options)
 driver.get("https://web.whatsapp.com/")
 
-input('Press enter after read captcha Whatsapp web')
-
-wait = WebDriverWait(driver, 600)
-
-elem = driver.find_element_by_xpath(
-    '//span[contains(text(),"' + recipient + '")]'
-)
-elem.click()
-
-inp_xpath = '//div[@data-tab="1"][contains(@class,"copyable-text") and contains(@class,"selectable-text")]'
-input_box = wait.until(
-    EC.presence_of_element_located((By.XPATH, inp_xpath))
+qrcode = WebDriverWait(driver, 20).until(
+    EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/div[2]/div[1]/div/div[2]/div/img"))
 )
 
-now = datetime.datetime.now()
-input_box.send_keys(message + Keys.ENTER)
+qrcode_src = qrcode.get_attribute("src")
+qrcode_src = qrcode_src.replace("data:image/png;base64,", "")
+qrcode_image = Image.open(BytesIO(base64.b64decode(qrcode_src)))
+qrcode_image.save("qrcode.png", "PNG")
+qrcode_image.show()
 
-message = "Send message (%s) to (%s)" % (message, recipient)
-print(message)
+running = True
+while running:
+    recipient = input("To: ")
+    message = input("Message: ")
+
+    elem = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.XPATH, '//span[contains(text(),"' + recipient + '")]'))
+    )
+    elem.click()
+
+    inp_xpath = '//div[@data-tab="1"][contains(@class,"copyable-text") and contains(@class,"selectable-text")]'
+    input_box = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.XPATH, inp_xpath))
+    )
+    input_box.send_keys(message + Keys.ENTER)
+    message_log = "Send message (%s) to (%s)" % (message, recipient)
+    print(message_log)
+
+    exit_send = int(input("Enter 1 to exit or 0 to continue: "))
+    if exit_send == 1:
+        running = False
 
 driver.quit()
