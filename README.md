@@ -1,33 +1,27 @@
 
-# Mensagem para Whatsapp via "linha de comando"
+# Message to Whatsapp via "command line"
 
-Enviar mensagem para o Whatsapp através de "linha de comando", utilizando Python e Selenium.
+Send message to Whatsapp via "command line" using Python and Selenium.
 
-> O desenvolvimento foi feito em Linux (Fedora 28).
-
-## Requisitos
+## Requirements
 * Python 3
-* Navegador Firefox
-* Interface Gráfica (SO)
-* Celular com Whatsapp instalado
+* Whatsapp Phone Installed
 
-## Instalação
+## Configuration
 ```
-$ virtualenv venv
-$ source venv/bin/activate
+$ virtualenv .venv
+$ source .venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
-## Execução
+## Execution
 
-### 1 - Execute em seu terminal
+### 1 - Run on your terminal
 ```
-$ python send.py -R "Nome do Contato" -M "Mensagem a ser enviada"
+$ python send.py
 ```
-Onde **-R** é o nome do seu contato que esta cadastrado previamente em seu Whatsapp (deve ser idêntico ao cadastrado), e **-M** é a mensagem a ser enviada.
+### 2 - QRCODE will open on your computer. Scan QRCODE with your app
 
-### 2 - O site https://web.whatsapp.com/ irá abrir em seu navegador Firefox e será necessário fazer a leitura do QRCODE.
+### 3 - Input a destination (you must fill in the destination with the name is registered in your Whatsapp) and input message and press Enter
 
-### 3 - Após a leitura é necessário pressionar enter no terminal para continuar com o envio da mensagem.
-
-### 4 - A mensagem será enviada e o navegador será fechado.
+### 4 - Message send
