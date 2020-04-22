@@ -1,31 +1,24 @@
 # -*- coding: utf-8 -*-
 import os
-import base64
-from PIL import Image
-from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support import expected_conditions as EC
+from qrcode import Qrcode
 
+print("Started process")
+
+print("Load Firefox")
 options = Options()
 options.headless = True
 path = os.path.abspath('.')
-path_geckodriver = path + '/geckodriver/geckodriver-v0.24.0-linux64/geckodriver'
+path_geckodriver = os.path.join(path, 'geckodriver/geckodriver-v0.24.0-linux64/geckodriver')
 driver = webdriver.Firefox(executable_path=path_geckodriver, options=options)
 driver.get("https://web.whatsapp.com/")
 
-qrcode = WebDriverWait(driver, 20).until(
-    EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/div[2]/div[1]/div/div[2]/div/img"))
-)
-
-qrcode_src = qrcode.get_attribute("src")
-qrcode_src = qrcode_src.replace("data:image/png;base64,", "")
-qrcode_image = Image.open(BytesIO(base64.b64decode(qrcode_src)))
-qrcode_image.save("qrcode.png", "PNG")
-qrcode_image.show()
+Qrcode(driver)
 
 running = True
 while running:
