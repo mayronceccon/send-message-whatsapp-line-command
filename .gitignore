@@ -3,3 +3,4 @@
 /venv/
 geckodriver.log
 qrcode.png
+__pycache__
