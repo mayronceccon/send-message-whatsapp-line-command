@@ -13,11 +13,11 @@ class Qrcode:
         print("Loading QRCODE")
 
         with contextlib.suppress(WebDriverException):
-            self.__get_qrcode_img()
+            self.__get_qrcode_canvas()
             return
 
         with contextlib.suppress(WebDriverException):
-            self.__get_qrcode_canvas()
+            self.__get_qrcode_img()
             return
 
         raise Exception("Error in get QRCODE")
